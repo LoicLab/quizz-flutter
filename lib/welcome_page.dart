@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:quizz/question.dart';
 import 'package:quizz/question_page.dart';
+import 'package:quizz/datas.dart';
 
 class WelcomePage extends StatefulWidget{
   const WelcomePage({super.key});
@@ -35,18 +37,9 @@ class WelcomePageState extends State<WelcomePage>{
                       ),
                       TextButton(
                           onPressed: (){
-                            const questionPage = QuestionPage(
-                              titleAppBar: "test",
-                              titlePage: 'Question numéro',
-                              question: 'La devis',
-                              image: 'images/belgique.jpg',
-                              nextQuestionPage: QuestionPage(
-                                  titleAppBar: "Score",
-                                  titlePage: "Question numéro 2",
-                                  question: "La lune va finir par tomber",
-                                  image: "images/lune.jpg",
-                                  nextQuestionPage: null
-                              ),
+                            Question firstQuestion = Datas().listeQuestions.firstWhere((element) => element.id == 1);
+                              var questionPage = QuestionPage(
+                              question: firstQuestion, number: 1, points: 0,
                             );
                             Navigator.of(context).push(
                               MaterialPageRoute(builder: (BuildContext ctx){

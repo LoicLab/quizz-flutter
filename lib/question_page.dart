@@ -1,23 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:quizz/question.dart';
 import 'package:quizz/welcome_page.dart';
+import 'package:quizz/datas.dart';
 
 class QuestionPage extends StatefulWidget{
-  final String titleAppBar;
-  final String titlePage;
-  final String question;
-  final String image;
-  final QuestionPage? nextQuestionPage;
+  final String _titleAppBar = "Score";
+  final String _titlePage = "Question numéro";
+  final Question question;
   final int? points;
+  final int number;
 
   const QuestionPage({
     super.key,
-    required this.titleAppBar,
-    required this.titlePage,
     required this.question,
-    required this.image,
-    this.nextQuestionPage,
-    this.points
+    this.points,
+    required this.number
   });
+
+  String getTitleAppBar(){
+     return "$_titleAppBar $points";
+  }
+
+  String getTitlePage(){
+    int numberQuestions = Datas().listeQuestions.length;
+    return "$_titlePage $number/$numberQuestions";
+  }
 
   @override
   QuestionPageState createState()=> QuestionPageState();
@@ -27,30 +34,34 @@ class QuestionPageState extends State<QuestionPage>{
 
   @override
   Widget build(BuildContext context){
+    int? nextQuestionNumber;
+    if(widget.number == Datas().listeQuestions.length){
+      nextQuestionNumber = null;
+    }else{
+      nextQuestionNumber = widget.number +1;
+    }
     return Scaffold(
       appBar: AppBar(
         title: Text(
-            widget.titleAppBar
+            widget.getTitleAppBar()
         ),
       ),
       body:  Column(
         mainAxisSize: MainAxisSize.max,
         children: [
-          Text(widget.titlePage),
-          Text(widget.question),
-          Image.asset(widget.image),
+          Text(widget.getTitlePage()),
+          Text(widget.question.question),
+          Image.asset(widget.question.getImagePath()),
           Row(
             children: [
               TextButton(
                   onPressed: () {
                     showAlert(
-                        titleAlert: "Raté",
-                        imagePathAlert: 'images/faux.jpg',
                         nextQuestionPage: nextQuestionPage(
-                            widget.nextQuestionPage,
+                            nextQuestionNumber,
                             widget.points
-                        ) ,
-                        buttonText: "Passé à la question suivante"
+                        ),
+                        choice: false
                     );
                   },
                   child: const Text('Faux')
@@ -58,13 +69,11 @@ class QuestionPageState extends State<QuestionPage>{
               TextButton(
                   onPressed: () {
                     showAlert(
-                        titleAlert: "C'est gagné",
-                        imagePathAlert: 'images/vrai.jpg',
                         nextQuestionPage: nextQuestionPage(
-                            widget.nextQuestionPage,
+                            nextQuestionNumber,
                             widget.points
                         ),
-                        buttonText: "Passé à la question suivante"
+                        choice: true
                     );
                   },
                   child: const Text('Vrai')
@@ -77,12 +86,19 @@ class QuestionPageState extends State<QuestionPage>{
   }
 
   /// Popup alert
-  Future<void> showAlert({
-    required String titleAlert,
-    required String imagePathAlert,
-    required QuestionPage nextQuestionPage,
-    required String buttonText
-  }) async{
+  Future<void> showAlert({required QuestionPage nextQuestionPage, required bool choice}) async{
+    String titleAlert;
+    String imagePathAlert;
+    String explication;
+    if (widget.question.reponse == choice){
+      titleAlert = "C'est gagné";
+      imagePathAlert = 'images/vrai.jpg';
+      explication= '';
+    }else{
+      titleAlert = "Raté";
+      imagePathAlert = 'images/faux.jpg';
+      explication = widget.question.explication;
+    }
     showDialog(
         barrierDismissible: true,
         context: context,
@@ -91,6 +107,7 @@ class QuestionPageState extends State<QuestionPage>{
             title: Text(titleAlert),
             content: Image.asset(imagePathAlert),
             actions: [
+              Text(explication),
               TextButton(
                   onPressed: () {
                     Navigator.of(context).push(
@@ -99,7 +116,7 @@ class QuestionPageState extends State<QuestionPage>{
                         })
                     );
                   },
-                  child: Text(buttonText)
+                  child: const Text('Passé à la question suivante')
               )
             ],
           );
@@ -107,8 +124,8 @@ class QuestionPageState extends State<QuestionPage>{
   }
 
   ///Question suivante
-  nextQuestionPage(QuestionPage? nextQuestionPage, int? points){
-      if(nextQuestionPage == null){
+  nextQuestionPage(int? number, int? points){
+      if(number == null){
          return showDialog(
              barrierDismissible: true,
              context: context,
@@ -132,6 +149,15 @@ class QuestionPageState extends State<QuestionPage>{
              }
          );
       }
-      return nextQuestionPage;
+      return getNextQuestionPage(number: number);
+  }
+
+  ///Récupération de la page de la question suivante
+  QuestionPage getNextQuestionPage({required int number}){
+    Question question = Datas().listeQuestions.firstWhere((element) => element.id == number);
+    return QuestionPage(
+        question: question,
+        number: number
+    );
   }
 }
