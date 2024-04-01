@@ -17,5 +17,5 @@ samples, guidance on mobile development, and a full API reference.
 
 ## Environment
 
-- Flutter 3.13.2
-- Dart 3.1.0
+- Flutter 3.19.5
+- Dart 3.3.3
