@@ -10,6 +10,7 @@ class WelcomePage extends StatefulWidget{
 }
 
 class WelcomePageState extends State<WelcomePage>{
+
   @override
   Widget build(BuildContext context){
     var size = MediaQuery.of(context).size;
@@ -39,7 +40,7 @@ class WelcomePageState extends State<WelcomePage>{
                           onPressed: (){
                             Question firstQuestion = Datas().listeQuestions.firstWhere((element) => element.id == 1);
                               var questionPage = QuestionPage(
-                              question: firstQuestion, number: 1, points: 0,
+                              question: firstQuestion, number: 1, points: 0
                             );
                             Navigator.of(context).push(
                               MaterialPageRoute(builder: (BuildContext ctx){
