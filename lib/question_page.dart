@@ -1,25 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:quizz/question.dart';
-import 'package:quizz/welcome_page.dart';
 import 'package:quizz/datas.dart';
 
 class QuestionPage extends StatefulWidget{
-  final String _titleAppBar = "Score";
+  final String _titleAppBar = "Score: ";
   final String _titlePage = "Question numéro";
   final Question question;
-  final int? points;
   final int number;
+  final int points;
 
   const QuestionPage({
     super.key,
     required this.question,
-    this.points,
-    required this.number
+    required this.number,
+    required this.points
   });
-
-  String getTitleAppBar(){
-     return "$_titleAppBar $points";
-  }
 
   String getTitlePage(){
     int numberQuestions = Datas().listeQuestions.length;
@@ -32,9 +27,12 @@ class QuestionPage extends StatefulWidget{
 
 class QuestionPageState extends State<QuestionPage>{
 
+  int newPoints=0;
+
   @override
   Widget build(BuildContext context){
     int? nextQuestionNumber;
+    newPoints = widget.points;
     if(widget.number == Datas().listeQuestions.length){
       nextQuestionNumber = null;
     }else{
@@ -43,7 +41,7 @@ class QuestionPageState extends State<QuestionPage>{
     return Scaffold(
       appBar: AppBar(
         title: Text(
-            widget.getTitleAppBar()
+            widget._titleAppBar+widget.points.toString()
         ),
       ),
       body:  Column(
@@ -57,11 +55,8 @@ class QuestionPageState extends State<QuestionPage>{
               TextButton(
                   onPressed: () {
                     showAlert(
-                        nextQuestionPage: nextQuestionPage(
-                            nextQuestionNumber,
-                            widget.points
-                        ),
-                        choice: false
+                        choice: false,
+                        nextQuestionNumber: nextQuestionNumber
                     );
                   },
                   child: const Text('Faux')
@@ -69,11 +64,8 @@ class QuestionPageState extends State<QuestionPage>{
               TextButton(
                   onPressed: () {
                     showAlert(
-                        nextQuestionPage: nextQuestionPage(
-                            nextQuestionNumber,
-                            widget.points
-                        ),
-                        choice: true
+                        choice: true,
+                        nextQuestionNumber: nextQuestionNumber
                     );
                   },
                   child: const Text('Vrai')
@@ -86,19 +78,23 @@ class QuestionPageState extends State<QuestionPage>{
   }
 
   /// Popup alert
-  Future<void> showAlert({required QuestionPage nextQuestionPage, required bool choice}) async{
+  Future<void> showAlert({ required bool choice, required int? nextQuestionNumber}) async{
     String titleAlert;
     String imagePathAlert;
     String explication;
+    //Si réponse juste
     if (widget.question.reponse == choice){
       titleAlert = "C'est gagné";
       imagePathAlert = 'images/vrai.jpg';
       explication= '';
+      newPoints++;
+    //Si fausse
     }else{
       titleAlert = "Raté";
       imagePathAlert = 'images/faux.jpg';
       explication = widget.question.explication;
     }
+    QuestionPage questionPage = nextQuestionPage(nextQuestionNumber,newPoints);
     showDialog(
         barrierDismissible: true,
         context: context,
@@ -112,7 +108,7 @@ class QuestionPageState extends State<QuestionPage>{
                   onPressed: () {
                     Navigator.of(context).push(
                         MaterialPageRoute(builder: (BuildContext ctx){
-                          return nextQuestionPage;
+                          return questionPage;
                         })
                     );
                   },
@@ -132,14 +128,12 @@ class QuestionPageState extends State<QuestionPage>{
              builder: (BuildContext ctx) {
                 return AlertDialog(
                   title: const Text("C'est fini"),
-                  content: Text("Votre score est de $points"),
+                  content: Text("Votre score est de $newPoints"),
                   actions: [
                     TextButton(
                         onPressed: () {
-                          Navigator.of(context).push(
-                              MaterialPageRoute(builder: (BuildContext ctx){
-                                return const WelcomePage();
-                              })
+                          Navigator.of(context).popUntil(
+                            ModalRoute.withName('/')
                           );
                         },
                         child: const Text("Ok")
@@ -149,15 +143,16 @@ class QuestionPageState extends State<QuestionPage>{
              }
          );
       }
-      return getNextQuestionPage(number: number);
+      return getNextQuestionPage(number: number, points: newPoints);
   }
 
   ///Récupération de la page de la question suivante
-  QuestionPage getNextQuestionPage({required int number}){
+  QuestionPage getNextQuestionPage({required int number, required int points}){
     Question question = Datas().listeQuestions.firstWhere((element) => element.id == number);
     return QuestionPage(
         question: question,
-        number: number
+        number: number,
+        points: points
     );
   }
 }
