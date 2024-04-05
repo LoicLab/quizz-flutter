@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:quizz/question.dart';
 import 'package:quizz/datas.dart';
 
+///Page des questions
 class QuestionPage extends StatefulWidget{
   final String _titleAppBar = "Score: ";
   final String _titlePage = "Question numéro";
@@ -16,6 +17,7 @@ class QuestionPage extends StatefulWidget{
     required this.points
   });
 
+  ///Formate le titre avec le nombre de question
   String getTitlePage(){
     int numberQuestions = Datas().listeQuestions.length;
     return "$_titlePage $number/$numberQuestions";
@@ -27,15 +29,20 @@ class QuestionPage extends StatefulWidget{
 
 class QuestionPageState extends State<QuestionPage>{
 
+  //Initilisation des nouveaux points
   int newPoints=0;
 
   @override
   Widget build(BuildContext context){
+    // le numéro de la question suivante
     int? nextQuestionNumber;
+    //Mise à jour du nombrede points
     newPoints = widget.points;
+    //Si on est sur la derniere question
     if(widget.number == Datas().listeQuestions.length){
       nextQuestionNumber = null;
     }else{
+      //Sinon incrémentation
       nextQuestionNumber = widget.number +1;
     }
     return Scaffold(
@@ -93,7 +100,7 @@ class QuestionPageState extends State<QuestionPage>{
     );
   }
 
-  /// Popup alert
+  /// Popup alert pour savori si l'on a répondu juste ou faux et passe à la question suivante
   Future<void> showAlert({ required bool choice, required int? nextQuestionNumber}) async{
     String titleAlert;
     String imagePathAlert;
@@ -110,6 +117,7 @@ class QuestionPageState extends State<QuestionPage>{
       imagePathAlert = 'images/faux.jpg';
       explication = widget.question.explication;
     }
+    //Récupération de la page de la question suivante
     QuestionPage questionPage = nextQuestionPage(nextQuestionNumber,newPoints);
     showDialog(
         barrierDismissible: true,
@@ -128,20 +136,22 @@ class QuestionPageState extends State<QuestionPage>{
                         })
                     );
                   },
-                  child: const Text('Passé à la question suivante')
+                  child: const Text('Passer à la question suivante')
               )
             ],
           );
         });
   }
 
-  ///Question suivante
+  ///Page de la question suivante
   nextQuestionPage(int? number, int? points){
+    //Si null message d'alerte avec le récapitulatif du score et retourne sur la page d'accueil
     if(number == null){
       return showDialog(
           barrierDismissible: true,
           context: context,
           builder: (BuildContext ctx) {
+            //Message d'alerte
             return AlertDialog(
               title: const Text(
                   "C'est fini",
@@ -153,12 +163,13 @@ class QuestionPageState extends State<QuestionPage>{
               content: Text(
                   "Votre score est de $newPoints",
                   style: const TextStyle(
-                    fontSize: 18
+                      fontSize: 18
                   )
               ),
               actions: [
                 TextButton(
                     onPressed: () {
+                      //Retourne sur la page d'acceuil
                       Navigator.of(context).popUntil(
                           ModalRoute.withName('/')
                       );
