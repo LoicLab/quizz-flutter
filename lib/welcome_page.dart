@@ -3,6 +3,7 @@ import 'package:quizz/question.dart';
 import 'package:quizz/question_page.dart';
 import 'package:quizz/datas.dart';
 
+///Page d'accueil
 class WelcomePage extends StatefulWidget{
   const WelcomePage({super.key});
   @override
@@ -27,36 +28,38 @@ class WelcomePageState extends State<WelcomePage>{
             Padding(
                 padding: const EdgeInsets.all(5),
                 child: Card(
-                  color: Theme.of(context).colorScheme.onSecondary,
-                  child: Column(
-                    children: [
-                      Image.asset(
-                        "images/cover.jpg",
-                        fit: BoxFit.cover,
-                        height: 250,
-                        width: size.width,
-                      ),
-                      TextButton(
-                          onPressed: (){
-                            Question firstQuestion = Datas().listeQuestions.firstWhere((element) => element.id == 1);
+                    color: Theme.of(context).colorScheme.onSecondary,
+                    child: Column(
+                      children: [
+                        Image.asset(
+                          "images/cover.jpg",
+                          fit: BoxFit.cover,
+                          height: 250,
+                          width: size.width,
+                        ),
+                        TextButton(
+                            onPressed: (){
+                              //Récupération de la premiere question
+                              Question firstQuestion = Datas().listeQuestions.firstWhere((element) => element.id == 1);
+                              //Initilisation de la page de la question 1
                               var questionPage = QuestionPage(
-                              question: firstQuestion, number: 1, points: 0
-                            );
-                            Navigator.of(context).push(
-                              MaterialPageRoute(builder: (BuildContext ctx){
-                                  return questionPage;
-                              })
-                            );
-                          },
-                          child: const Text(
-                            "Commencer le quizz",
-                            style: TextStyle(
-                              color: Colors.white
-                            ),
-                          )
-                      )
-                    ],
-                  )
+                                  question: firstQuestion, number: 1, points: 0
+                              );
+                              Navigator.of(context).push(
+                                  MaterialPageRoute(builder: (BuildContext ctx){
+                                    return questionPage;
+                                  })
+                              );
+                            },
+                            child: const Text(
+                              "Commencer le quizz",
+                              style: TextStyle(
+                                  color: Colors.white
+                              ),
+                            )
+                        )
+                      ],
+                    )
                 )
             )
           ],
