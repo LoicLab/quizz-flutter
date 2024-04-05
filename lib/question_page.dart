@@ -47,31 +47,47 @@ class QuestionPageState extends State<QuestionPage>{
       body:  Column(
         mainAxisSize: MainAxisSize.max,
         children: [
-          Text(widget.getTitlePage()),
-          Text(widget.question.question),
-          Image.asset(widget.question.getImagePath()),
-          Row(
-            children: [
-              TextButton(
-                  onPressed: () {
-                    showAlert(
-                        choice: false,
-                        nextQuestionNumber: nextQuestionNumber
-                    );
-                  },
-                  child: const Text('Faux')
-              ),
-              TextButton(
-                  onPressed: () {
-                    showAlert(
-                        choice: true,
-                        nextQuestionNumber: nextQuestionNumber
-                    );
-                  },
-                  child: const Text('Vrai')
+          Padding(
+              padding: const EdgeInsets.all(5),
+              child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    widget.getTitlePage(),
+                    style: const TextStyle(fontSize: 18),
+                  )
               )
-            ],
+          ),
+          Padding(
+              padding: const EdgeInsets.only(top: 10,left: 5,right: 5,bottom: 20),
+              child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    widget.question.question,
+                    style: const TextStyle(fontSize: 15),
+                  )
+              )
+          ),
+          Image.asset(widget.question.getImagePath()),
+          Padding(
+              padding: const EdgeInsets.only(top: 15),
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    answerButton(
+                        nextQuestionNumber: nextQuestionNumber,
+                        textButton: 'Faux',
+                        choice: false
+                    ),
+                    answerButton(
+                        nextQuestionNumber: nextQuestionNumber,
+                        textButton: 'Vrai',
+                        choice: true
+                    )
+                  ]
+              )
           )
+
         ],
       ),
     );
@@ -88,7 +104,7 @@ class QuestionPageState extends State<QuestionPage>{
       imagePathAlert = 'images/vrai.jpg';
       explication= '';
       newPoints++;
-    //Si fausse
+      //Si fausse
     }else{
       titleAlert = "Raté";
       imagePathAlert = 'images/faux.jpg';
@@ -121,29 +137,40 @@ class QuestionPageState extends State<QuestionPage>{
 
   ///Question suivante
   nextQuestionPage(int? number, int? points){
-      if(number == null){
-         return showDialog(
-             barrierDismissible: true,
-             context: context,
-             builder: (BuildContext ctx) {
-                return AlertDialog(
-                  title: const Text("C'est fini"),
-                  content: Text("Votre score est de $newPoints"),
-                  actions: [
-                    TextButton(
-                        onPressed: () {
-                          Navigator.of(context).popUntil(
-                            ModalRoute.withName('/')
-                          );
-                        },
-                        child: const Text("Ok")
-                    )
-                  ],
-                );
-             }
-         );
-      }
-      return getNextQuestionPage(number: number, points: newPoints);
+    if(number == null){
+      return showDialog(
+          barrierDismissible: true,
+          context: context,
+          builder: (BuildContext ctx) {
+            return AlertDialog(
+              title: const Text(
+                  "C'est fini",
+                  style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold
+                  )
+              ),
+              content: Text(
+                  "Votre score est de $newPoints",
+                  style: const TextStyle(
+                    fontSize: 18
+                  )
+              ),
+              actions: [
+                TextButton(
+                    onPressed: () {
+                      Navigator.of(context).popUntil(
+                          ModalRoute.withName('/')
+                      );
+                    },
+                    child: const Text("Ok")
+                )
+              ],
+            );
+          }
+      );
+    }
+    return getNextQuestionPage(number: number, points: newPoints);
   }
 
   ///Récupération de la page de la question suivante
@@ -153,6 +180,23 @@ class QuestionPageState extends State<QuestionPage>{
         question: question,
         number: number,
         points: points
+    );
+  }
+
+  ///Bouton pour la réponse de la question
+  ElevatedButton answerButton({required int? nextQuestionNumber, required String textButton, required bool choice}){
+    return ElevatedButton(
+      onPressed: () {
+        showAlert(
+            choice: choice,
+            nextQuestionNumber: nextQuestionNumber
+        );
+      },
+      style: ElevatedButton.styleFrom(
+          backgroundColor: Theme.of(context).colorScheme.onSecondary,
+          foregroundColor: Colors.white
+      ),
+      child: Text(textButton),
     );
   }
 }
