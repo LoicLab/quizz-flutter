@@ -41,7 +41,7 @@ class WelcomePageState extends State<WelcomePage>{
                             onPressed: (){
                               //Récupération de la premiere question
                               Question firstQuestion = Datas().listeQuestions.firstWhere((element) => element.id == 1);
-                              //Initilisation de la page de la question 1
+                              //Initialisation de la page de la question 1
                               var questionPage = QuestionPage(
                                   question: firstQuestion, number: 1, points: 0
                               );

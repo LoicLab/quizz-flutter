@@ -29,16 +29,16 @@ class QuestionPage extends StatefulWidget{
 
 class QuestionPageState extends State<QuestionPage>{
 
-  //Initilisation des nouveaux points
+  //Initialisation des nouveaux points
   int newPoints=0;
 
   @override
   Widget build(BuildContext context){
-    // le numéro de la question suivante
+    //Le numéro de la question suivante
     int? nextQuestionNumber;
-    //Mise à jour du nombrede points
+    //Mise à jour du nombre de points
     newPoints = widget.points;
-    //Si on est sur la derniere question
+    //Si on est sur la dernière question
     if(widget.number == Datas().listeQuestions.length){
       nextQuestionNumber = null;
     }else{
@@ -100,7 +100,7 @@ class QuestionPageState extends State<QuestionPage>{
     );
   }
 
-  /// Popup alert pour savori si l'on a répondu juste ou faux et passe à la question suivante
+  /// Popup alert pour savoir si l'on a répondu juste ou faux et passe à la question suivante
   Future<void> showAlert({ required bool choice, required int? nextQuestionNumber}) async{
     String titleAlert;
     String imagePathAlert;
@@ -169,7 +169,7 @@ class QuestionPageState extends State<QuestionPage>{
               actions: [
                 TextButton(
                     onPressed: () {
-                      //Retourne sur la page d'acceuil
+                      //Retourne sur la page d'accueil
                       Navigator.of(context).popUntil(
                           ModalRoute.withName('/')
                       );
