@@ -1,6 +1,7 @@
 # quizz
 
-A quizz project
+Build an Android application to create a quiz.
+Uses page management and interactive widgets.
 
 ## Getting Started
 

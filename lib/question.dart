@@ -1,4 +1,4 @@
-///Uestion pour le quizz
+///Question pour le quizz
 class Question {
 
   int id;
