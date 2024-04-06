@@ -3,14 +3,14 @@ class Question {
 
   int id;
   String question;
-  bool reponse;
+  bool response;
   String explication;
   String imageName;
 
   Question({
     required this.id,
     required this.question,
-    required this.reponse,
+    required this.response,
     required this.explication,
     required this.imageName
   });
