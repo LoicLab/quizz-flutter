@@ -83,12 +83,10 @@ class QuestionPageState extends State<QuestionPage>{
                   children: [
                     answerButton(
                         nextQuestionNumber: nextQuestionNumber,
-                        textButton: 'Faux',
                         choice: false
                     ),
                     answerButton(
                         nextQuestionNumber: nextQuestionNumber,
-                        textButton: 'Vrai',
                         choice: true
                     )
                   ]
@@ -106,7 +104,7 @@ class QuestionPageState extends State<QuestionPage>{
     String imagePathAlert;
     String explication;
     //Si réponse juste
-    if (widget.question.reponse == choice){
+    if (widget.question.response == choice){
       titleAlert = "C'est gagné";
       imagePathAlert = 'images/vrai.jpg';
       explication= '';
@@ -120,7 +118,7 @@ class QuestionPageState extends State<QuestionPage>{
     //Récupération de la page de la question suivante
     QuestionPage questionPage = nextQuestionPage(nextQuestionNumber,newPoints);
     showDialog(
-        barrierDismissible: true,
+        barrierDismissible: false,
         context: context,
         builder: (BuildContext ctx) {
           return AlertDialog(
@@ -195,7 +193,7 @@ class QuestionPageState extends State<QuestionPage>{
   }
 
   ///Bouton pour la réponse de la question
-  ElevatedButton answerButton({required int? nextQuestionNumber, required String textButton, required bool choice}){
+  ElevatedButton answerButton({required int? nextQuestionNumber, required bool choice}){
     return ElevatedButton(
       onPressed: () {
         showAlert(
@@ -207,7 +205,7 @@ class QuestionPageState extends State<QuestionPage>{
           backgroundColor: Theme.of(context).colorScheme.onSecondary,
           foregroundColor: Colors.white
       ),
-      child: Text(textButton),
+      child: Text((choice) ? "Vrai" : "Faux"),
     );
   }
 }

@@ -4,13 +4,9 @@ import 'package:quizz/question_page.dart';
 import 'package:quizz/datas.dart';
 
 ///Page d'accueil
-class WelcomePage extends StatefulWidget{
+class WelcomePage extends StatelessWidget{
   const WelcomePage({super.key});
-  @override
-  WelcomePageState createState() => WelcomePageState();
-}
 
-class WelcomePageState extends State<WelcomePage>{
 
   @override
   Widget build(BuildContext context){
@@ -22,8 +18,7 @@ class WelcomePageState extends State<WelcomePage>{
             'Quizz flutter'
         ),
       ),
-      body: SingleChildScrollView(
-        child: Column(
+      body: Column(
           children: [
             Padding(
                 padding: const EdgeInsets.all(5),
@@ -34,10 +29,10 @@ class WelcomePageState extends State<WelcomePage>{
                         Image.asset(
                           "images/cover.jpg",
                           fit: BoxFit.cover,
-                          height: 250,
+                          height: size.height/3,
                           width: size.width,
                         ),
-                        TextButton(
+                        ElevatedButton(
                             onPressed: (){
                               //Récupération de la premiere question
                               Question firstQuestion = Datas().listeQuestions.firstWhere((element) => element.id == 1);
@@ -64,7 +59,6 @@ class WelcomePageState extends State<WelcomePage>{
             )
           ],
         ),
-      ),
     );
   }
 }
